@@ -1,0 +1,80 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<%@ Register Assembly="DevExpress.Web.ASPxGridView.v11.1, Version=11.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
+    Namespace="DevExpress.Web.ASPxGridView" TagPrefix="dx" %>
+<%@ Register Assembly="DevExpress.Web.ASPxEditors.v11.1, Version=11.1.8.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a"
+    Namespace="DevExpress.Web.ASPxEditors" TagPrefix="dx" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>ASPxGridView - How to refresh a master grid when a detail grid has been updated</title>
+
+    <script type="text/javascript">
+        var command = "";
+        function OnBeginCallback(s, e) {
+            command = e.command;
+        }
+
+        function OnEndCallback(s, e) {
+            if (command == "ADDNEWROW" || command == "UPDATEEDIT") {
+                mainGrid.Refresh();
+            }
+        }
+    </script>
+
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <dx:ASPxGridView ID="ASPxGridView1" runat="server" KeyFieldName="Id" AutoGenerateColumns="False" ClientInstanceName="mainGrid"
+            DataSourceID="mainSource">
+            <SettingsDetail ShowDetailRow="true" />
+           
+            <Columns>
+                <dx:GridViewDataComboBoxColumn FieldName="ProductId" Caption="Product" VisibleIndex="1">
+                    <PropertiesComboBox DataSourceID="productSource" TextField="Name" ValueField="Id"
+                        DropDownHeight="150px">
+                    </PropertiesComboBox>
+                </dx:GridViewDataComboBoxColumn>
+                <dx:GridViewDataTextColumn FieldName="Quantity" VisibleIndex="1">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="Price" ReadOnly="True" VisibleIndex="2">
+                    <PropertiesTextEdit DisplayFormatString="c" />
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="Total" ReadOnly="True" VisibleIndex="3">
+                </dx:GridViewDataTextColumn>
+                <dx:GridViewDataTextColumn FieldName="Id" ReadOnly="True" VisibleIndex="4">
+                </dx:GridViewDataTextColumn>
+            </Columns>
+            <Templates>
+                <DetailRow>
+                    <dx:ASPxGridView ID="gridProducts" ClientInstanceName="gridProducts" runat="server"
+                        DataSourceID="productSource" KeyFieldName="Id" Width="300px">
+                         <ClientSideEvents EndCallback="OnEndCallback" BeginCallback="OnBeginCallback" />
+                        <Columns>
+                            <dx:GridViewCommandColumn VisibleIndex="0">
+                                <NewButton Visible="True" />
+                                <EditButton Visible="True" />
+                            </dx:GridViewCommandColumn>
+                            <dx:GridViewDataColumn FieldName="Name" VisibleIndex="0">
+                            </dx:GridViewDataColumn>
+                            <dx:GridViewDataTextColumn FieldName="Price" VisibleIndex="1">
+                                <PropertiesTextEdit DisplayFormatString="c" />
+                            </dx:GridViewDataTextColumn>
+                        </Columns>
+                        <SettingsEditing Mode="Inline" />
+                        <SettingsBehavior AllowDragDrop="false" />
+                    </dx:ASPxGridView>
+                </DetailRow>
+            </Templates>
+        </dx:ASPxGridView>
+        <asp:ObjectDataSource ID="mainSource" runat="server" SelectMethod="GetItems" TypeName="OrderItemsProvider"
+            UpdateMethod="ItemUpdate" InsertMethod="ItemInsert" DeleteMethod="ItemDelete">
+        </asp:ObjectDataSource>
+        <asp:ObjectDataSource ID="productSource" runat="server" SelectMethod="GetProducts"
+            TypeName="OrderItemsProvider" UpdateMethod="ProductUpdate" InsertMethod="ProductInsert">
+        </asp:ObjectDataSource>
+    </div>
+    </form>
+</body>
+</html>
