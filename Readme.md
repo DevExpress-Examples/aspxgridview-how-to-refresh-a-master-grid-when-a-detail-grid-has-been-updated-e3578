@@ -6,6 +6,9 @@
 * [Default.aspx.cs](./CS/WebSite/Default.aspx.cs) (VB: [Default.aspx.vb](./VB/WebSite/Default.aspx.vb))
 <!-- default file list end -->
 # ASPxGridView - How to refresh a master grid when a detail grid has been updated
+<!-- run online -->
+**[[Run Online]](https://codecentral.devexpress.com/e3578/)**
+<!-- run online end -->
 
 
 <p>This sample demonstrates how to update a primary grid data in response to changes made within a detail grid. By design, ASPxGridView can update its own rendering when processing a callback, but not the rending of outside controls. Thus, to refresh the main grid data, it is necessary to call the <a href="http://documentation.devexpress.com/#AspNet/DevExpressWebASPxGridViewScriptsASPxClientGridView_Refreshtopic"><u>Refresh</u></a> method when the detail grid data has been changed. Handle the detail grid EndCallback event handler for this. To overcome the circularity, also handle the <a href="http://documentation.devexpress.com/#AspNet/DevExpressWebASPxGridViewScriptsASPxClientGridView_BeginCallbacktopic"><u>BeginCallback</u></a> event as follows:</p>
